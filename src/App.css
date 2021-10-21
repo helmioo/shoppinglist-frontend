@@ -5,14 +5,16 @@
 .delete {
   text-decoration: underline;
   color: #333;
-  margin-left: 242px;
 }
 
 input {
   margin: 3px;
 }
 
-ul li {
-  list-style: none;
-  margin-left: 25px;
+table {
+  margin-left: 75px;
+}
+
+tr td {
+  padding-right: 120px;
 }

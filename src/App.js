@@ -1,13 +1,15 @@
 import './App.css';
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import uuid from 'react-uuid'
 
 const URL = 'http://localhost/shopping-list/'
 
 function App() {
 
   const [items, setItems] = useState([])
-  const [item, setItem] = useState('')
+  const [description, setDescription] = useState('')
+  const [amount, setAmount] = useState('')
 
   useEffect(() => {
     axios.get(URL)
@@ -21,7 +23,7 @@ function App() {
 
   function save(e) {
     e.preventDefault()
-    const json = JSON.stringify({description:item})
+    const json = JSON.stringify({description:description, amount:amount})
     axios.post(URL + 'add.php', json,{
       headers: {
         'Content-Type' : 'application/json'
@@ -29,7 +31,8 @@ function App() {
     })
     .then((response) => {
       setItems(items => [...items,response.data])
-      setItem('')
+      setDescription('')
+      setAmount('')
     }).catch (error => {
       //console.log(error);
       alert(error.response.data.error)
@@ -57,21 +60,24 @@ function App() {
     <h3>Shopping list</h3>
     <form onSubmit={save}>
       <label>New item</label>
-      <input placeholder="Type description" value={item} onChange={e => setItem(e.target.value)}></input>
-      <input placeholder="Type amount" value={item} onChange={e => setItem(e.target.value)}></input>
+      <input placeholder="Type description" value={description} onChange={e => setDescription(e.target.value)}></input>
+      <input placeholder="Type amount" value={amount} onChange={e => setAmount(e.target.value)}></input>
       <button>Add</button>
     </form>
-   <ul>
+   <table>
+     <tbody>
       {items?.map(item => (
-        <li key={item.id}>
-          {item.description}
-          {item.amount}
-      <a href="#" className="delete" onClick={() => remove(item.id)}>
-        Delete
-      </a>
-      </li>
+        <tr key={uuid()}>
+          <td>{item.description}</td>
+          <td>{item.amount}</td>
+          <td><a href="#" className="delete" onClick={() => remove(item.id)}>
+              Delete
+              </a>
+          </td>
+      </tr>
       ))}
-   </ul>
+      </tbody>
+   </table>
   </div>
   );
 }
